@@ -7,52 +7,40 @@ use-leaflet: true
 <section class="flex justify-center">
   <article class="standout-box blue large">
     <div class="big-text header" id="map-box" data-aos="fade-left">
-      The Municipal Election was October 22, 2022
+    The Municipal Election was October 22, 2022
     </div>
+    <p>Use this website to learn about the municipal election, and the
+    candidates asking for your vote. If you are feeling overwhelmed or
+    confused you can start by reading the 
+     <a href="./resources/getting-informed" target="_blank">getting
+     informed</a> page for step-by-step guidance.
+    </p>
     <div data-aos="fade-left">
-      <p>Use this website to <strong>learn about the municipal
-      election</strong>, and the
-      <strong>candidates</strong> asking for your vote. 
-      </p>
-      <p>To find your candidates, first find your township or city
-      ward on the <strong>map below</strong>. You can type your address or click your
-      location. Then you will 
-      be able to find the <strong>regional</strong>,
-      <strong>municipality</strong> and <strong>school board</strong>
-      candidates you can vote for.
+     <p>Type your address to identify your ward, or click your
+     location on the map. Once you have identified your ward you will
+     be able to see the <strong>regional</strong>,
+     <strong>municipality</strong> and <strong>school board</strong>
+     candidates you can vote for.
      </p>
-      <p>
-      Overwhelmed? Not sure where to start? Read the 
-       <a href="./resources/getting-informed" target="_blank">getting
-       informed</a> page for step-by-step guidance.
-      </p>
-    </div>
-
-    <div id="map-no-js-warning" class="show-no-js aside-box blue"> 
-    You
-    appear to have JavaScript disabled. This means you will not be
-    able to use the interactive map to find your township or city
-    ward. Instead, you can use the <a href="/by-ward/">text
-    listing</a>.  
     </div>
 
     <div class="content" data-aos="fade-up">
-     <p style="font-size: smaller">
+     <p>
      (Note that although the address lookup is
      pretty good, it is not 100% accurate, especially near ward
      boundaries. If in doubt consult your <a
      href="https://wrvotes.com" target="_blank">municipality</a>.)</p>
+     <div class="map-loader" aria-live="polite" data-baseurl="{{ site.baseurl }}">
+       <p id="map-loader-status" class="map-loader-status">
+         Loading the interactive ward map.
+       </p>
+     </div>
      <div id="map-searchbar"></div>
      <div id="map"></div>
      <p><strong>Note:</strong> The map loads more slowly than the rest
-     of the page, so be patient, or use the <a href="/by-ward/">text listing</a>.</p>
+     of the page, so be patient, or use the <a href="/wards/">ward listing</a>.</p>
     </div>
   </article>
 </section>
 
-<script src="{{ site.baseurl }}/assets/js/leaflet.js"></script>
-<script src="{{ site.baseurl }}/assets/js/leaflet-search.min.js"></script>
-<!-- This has too many dependencies to load locally. -->
-<script src="https://unpkg.com/leaflet-pip@1.1.0/leaflet-pip.js"></script>
-<script src="{{ site.baseurl }}/assets/js/jquery-3.6.0.min.js"></script>
-<script src="{{ site.baseurl }}/assets/js/show-map.js"></script>
+<script defer src="{{ site.baseurl }}/assets/js/home-map-loader.js"></script>
