@@ -104,7 +104,7 @@ sometimes in tension with the text-only navigation.
   {% endfor %}
 
   <nav id="toc-tabs" aria-label="Candidate races">
-    <div class="tab-strip">
+    <div class="tab-strip" role="tablist">
       {% for race-id in include.races-split %}
 
         {% assign race-info = site.data.internal.position-tags |
@@ -120,6 +120,7 @@ sometimes in tension with the text-only navigation.
                for="{{ race-id | slugify }}"
                tabindex=0
                aria-selected="false"
+               role="tab"
                >{{ race-info.PositionCategory }}</label></a>
           <br class="textonly"/>
         {% endif %}
@@ -134,6 +135,7 @@ sometimes in tension with the text-only navigation.
           for="{{ group | slugify }}"
           tabindex=0
           aria-selected="false"
+          role="tab"
           >{{ alias-info.ShortDesc }}</label></a>
         <br class="textonly"/>
       {% endfor %}
@@ -142,7 +144,9 @@ sometimes in tension with the text-only navigation.
     {% for group in groupings %}
         {% assign alias-info = site.data.internal.aliases | 
           where:"Alias",group | first %}
-        <div class="tab-strip substrip {{ group | slugify }}-tabstrip">
+        <div class="tab-strip substrip {{ group | slugify }}-tabstrip"
+          role="tablist"
+        >
           
           {% for race-id in include.races-split %}
             {% assign race-info = site.data.internal.position-tags |
@@ -156,6 +160,7 @@ sometimes in tension with the text-only navigation.
                   for="{{ race-id | slugify  }}"
                   tabindex=0
                   aria-selected="false"
+                  role="tab"
                   >{{ race-info.PositionCategory }}</label></a>
               <br class="textonly"/>
               
