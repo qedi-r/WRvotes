@@ -193,6 +193,11 @@ nav#toc-tabs {
     border-radius: 0.7em;
     text-align: center;
 
+    &:focus-visible {
+      outline: 0.2em solid $blue;
+      outline-offset: 0.2em;
+    }
+
     /* 
     border-color: $dark !important;
     border-top: solid;
