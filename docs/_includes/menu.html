@@ -2,7 +2,7 @@
 From: https://christianspecht.de/2014/06/18/building-a-pseudo-dynamic-tree-menu-with-jekyll/
 {% endcomment %}
 {% assign navurl = page.url | remove: '.html' %}
-<div id="main-menu">
+<nav id="main-menu" aria-label="Main menu">
   <div class="inner">
     <ul id="main-menu-ul" class="hidden">
       {%- for item in site.data.internal.menu-layout %}
@@ -13,4 +13,4 @@ From: https://christianspecht.de/2014/06/18/building-a-pseudo-dynamic-tree-menu-
       {% endfor -%}
     </ul>
   </div>
-</div>
+</nav>

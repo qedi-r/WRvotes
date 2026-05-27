@@ -143,14 +143,9 @@ $(document).ready(function () {
       '<button data-toc="' +
       target +
       '" ' +
-      'id="' +
-      target +
-      '-btn" ' +
-      'class="' +
-      classname +
-      '" title="' +
-      title +
-      '">' +
+      'id="' + target + '-btn" ' + 'class="' + classname +
+      '" title="' + title + 
+      '" >' +
       inittext +
       "</button>";
     $("#" + target)
@@ -167,24 +162,40 @@ $(document).ready(function () {
   // ------------------------
   function add_menu_toggle_button() {
     var target = $(this).attr("id");
+    var target_button = target + "-btn"; // Violates DRY
     add_ul_toggle_button(
       target,
       "toggle-menu",
       "toggle main menu",
       '<i class="fas fa-bars"></i>',
     );
+
+    $("#" + target_button).attr({
+      "aria-controls": target,
+      "aria-expanded": "false",
+      "aria-label": "Toggle main menu",
+      type: "button",
+    });
+
   }
 
   // ------------------------
-  function toggle_main_menu() {
+  function toggle_main_menu(button_id) {
     var target_ul = "#main-menu-ul";
+    var target_button = "#main-menu-ul-btn";
 
     if ($(target_ul).hasClass("hidden")) {
       $(target_ul).removeClass("hidden");
       $(target_ul).slideDown();
+      $(target_button).attr({
+        "aria-expanded": "true",
+      });
     } else {
       $(target_ul).addClass("hidden");
       $(target_ul).slideUp();
+      $(target_button).attr({
+        "aria-expanded": "false",
+      });
     }
   }
 
