@@ -40,8 +40,7 @@ where:"PositionUniqueName",ward-id | first -%}
     Information</a> page for more details.
 </p>
 <p>
-  This worksheet was generated {{ 'now' | date: "%A, %B %d, %Y, %I:%M
-  %P %Z" }}.
+  This worksheet was generated {{ 'now' | date: "%A, %B %d, %Y, %I:%M %P %Z" }}.
   If you have printed this page, check that candidates have not been added or withdrawn since then.
 </p>
 
@@ -89,8 +88,9 @@ where:"Name",ward-info.WardMunicipality | first %}
           {% for n in sorted-nominees %}
           <tr>
             <td class="cell">
-              <button class="favourite-btn" data-candidate-id="{{ n.UniqueID }}" aria-label="Favourite {{ n["
-                Given_Names"] }} {{ n["Last_Name"] }}">
+              <button class="favourite-btn" data-candidate-id="{{ n.UniqueID }}" 
+                aria-pressed="false"
+                aria-label="Favourite {{ n[" Given_Names"] }} {{ n["Last_Name"] }}">
                 <i class="fa-regular fa-heart" aria-hidden="true"></i>
               </button>
             </td>
@@ -104,7 +104,9 @@ where:"Name",ward-info.WardMunicipality | first %}
             </s>
             {%- endif -%}
             <td class="cell">
-              <div class="auto-resize-textarea" contenteditable="true" role="textbox" aria-multiline="true"
+              <div class="auto-resize-textarea" contenteditable="true" role="textbox" 
+                aria-multiline="true"
+                aria-label="Notes for {{ n[" Given_Names"] }} {{ n["Last_Name"] }}"
                 data-candidate-id="{{ n.UniqueID }}">
                 {%- if n.Withdrawn and n.Withdrawn == 'Y' %}
                 Candidate withdrawn.
