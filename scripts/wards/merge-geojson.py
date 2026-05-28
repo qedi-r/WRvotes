@@ -88,6 +88,8 @@ def round_coords(obj, decimals=6):
     if isinstance(obj, (int, float)):
         return round(obj, decimals)
     if isinstance(obj, list):
+        if len(obj) == 3:
+            return round_coords(obj[0:2], decimals)
         return [round_coords(v, decimals) for v in obj]
     if isinstance(obj, dict):
         return {k: round_coords(v, decimals) for k, v in obj.items()}
@@ -182,9 +184,6 @@ def find_and_clip_overlaps(indexed):
         for j, (src_j, feat_j) in enumerate(indexed[i + 1 :], i + 1):
             if {src_i, src_j} != {KITCHENER, WATERLOO}:
                 continue
-            name_pair = frozenset(
-                {feat_i["properties"]["Name"], feat_j["properties"]["Name"]}
-            )
             for overlap in EXPECTED_OVERLAPS:
                 a_name = overlap["a"]["name"]
                 b_name = overlap["b"]["name"]
