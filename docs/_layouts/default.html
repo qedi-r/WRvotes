@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}" 
-  class="{%- if page.pad-scrolling -%}pad-scrolling{%- endif -%}">
+<html lang="{{ site.lang | default: "en-US" }}" class="no-js">
 
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,maximum-scale=2">
+
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
     <link rel="icon" href="{{ site.baseurl }}/assets/images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="stylesheet" type="text/css" media="print" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/fa-all.min.css">
-
     {% if page.use-leaflet %}
       <link rel="stylesheet" type="text/css" media="screen"
         href="{{ site.baseurl }}/assets/css/leaflet.css">
@@ -27,19 +28,31 @@
     <title>{{ page.title }} | {{ site.title }}</title>
   {%- else -%}
 
-    {% assign ward-id = page.url | replace: '.html', ''
+    {%- assign ward-id = page.url | replace: 'worksheet-','' | replace: '.html', ''
        | split: '/' | last -%}
-    {% assign ward-info-list = site.data.internal.position-tags
+    {%- assign worksheet-chopped = page.url | split: "worksheet-" | last -%}
+    {%- if worksheet-chopped == page.url -%}
+      {%- assign insert = "" -%}
+    {%- else -%}
+      {%- assign insert = "Worksheet: " -%}
+    {%- endif -%}
+
+    {%- assign ward-info-list = site.data.internal.position-tags
        | where:"PositionUniqueName",ward-id -%}
+
     {%- if ward-info-list.size > 0 -%}
       {%- assign ward-info = ward-info-list | first -%}
-      <title>{{ ward-info.PositionDesc }} | {{ site.title }}</title>
+        <title>{{ insert }}Candidates for those in {{ ward-info.WardMunicipality }} {{ ward-info.ShortLocalDesc }} | {{ site.title }}</title>
     {%- else -%}
       <title>{{ site.title }} | boo! no title!</title>
     {%- endif -%}
   {%- endif -%}
   </head>
-
+  <script type="text/javascript">
+    var h = document.querySelector('html');
+    h.classList.add('js-enabled');
+    h.classList.remove('no-js');
+  </script>
   <body>
 
     <!-- HEADER -->
@@ -65,11 +78,17 @@
     {% include menu.html %}
 
     <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+    {% if page.readable-widths -%}
+      {% assign width-flag="readable-widths"%} 
+    {% else %}
+      {% assign width-flag="" %}
+    {% endif -%}
+
+    <main id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner {{ width-flag }}">
         {{ content }}
       </section>
-    </div>
+    </main>
 
     {% include footer.html %}
 
@@ -83,17 +102,19 @@
       AOS.init();
     </script>
 
-    <script>
-      (function() {
-        var footerHeight = document.getElementById('footer_wrap').getBoundingClientRect().height;
-        document.getElementsByTagName("body")[0].style.paddingBottom = footerHeight + 'px';
-      }())
-    </script>
-
     <script src="{{ site.baseurl }}/assets/js/jquery-3.6.0.min.js"></script>
-    <script src="{{ site.baseurl }}/assets/js/hide-listings.js"></script>
-    <script src="{{ site.baseurl }}/assets/js/accordion.js"></script>
-    <script src="{{ site.baseurl }}/assets/js/candidate-card.js"></script>
+    {% if page.hide-listings -%}
+      <script src="{{ site.baseurl }}/assets/js/hide-listings.js"></script>
+    {%- endif -%}
+    {%- if page.use-accordion -%}
+      <script src="{{ site.baseurl }}/assets/js/accordion.js"></script>
+    {%- endif -%}
+    {%- if page.use-candidate-card -%}
+      <script src="{{ site.baseurl }}/assets/js/candidate-card.js"></script>
+    {%- endif -%}
+    {%- if page.use-tabbed-interface -%}
+      <script src="{{ site.baseurl }}/assets/js/tabbed-interface.js"></script>
+    {%- endif -%}
   </body>
 </html>
 

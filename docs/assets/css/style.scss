@@ -193,6 +193,11 @@ nav#toc-tabs {
     border-radius: 0.7em;
     text-align: center;
 
+    &:focus-visible {
+      outline: 0.2em solid $blue;
+      outline-offset: 0.2em;
+    }
+
     /* 
     border-color: $dark !important;
     border-top: solid;
@@ -325,6 +330,11 @@ table.candidate-worksheet {
     margin: auto;
   }
 
+  .notes-btn {
+    display: block;
+    margin: auto;
+  }
+
   /* candidate name */
   tr :nth-child(2 of .cell) {
     width: 25%;
@@ -352,6 +362,25 @@ table.candidate-worksheet {
   }
 }
 
+.notes-container {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease;
+
+  &.open {
+    grid-template-rows: 1fr;
+  }
+
+  > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .auto-resize-textarea {
+    min-height: 0;
+  }
+}
+
 .auto-resize-textarea {
   font-size: inherit;
   font: inherit;
@@ -364,10 +393,33 @@ table.candidate-worksheet {
   }
 }
 
+
+/* ------------ HIDE/SHOW IF NO JS -------- */
+
+/* https://www.amityweb.co.uk/blog/flash-of-jquery-hidden-content-before-js-is-called-to-hide-it
+ */
+.js-enabled .show-no-js { 
+  display: none;
+} 
+
+/* Why would AOS turn this off? Undo it. */
+.no-js [data-aos] { 
+  pointer-events: auto;
+}
+
 /* ------------ FOOTER STYLING ----------- */
 
 div.footer {
   font-size: smaller;
+
+  .sharing { 
+    /* undo target icon */
+    a[target="_blank"]::after { 
+      content: '';
+      margin-left: 0;
+    } 
+  }
+
 }
 
 p.sharing a {
@@ -375,10 +427,10 @@ p.sharing a {
   margin-right: 0.5em;
 }
 
+
 #footer_wrap {
   background: $dark;
   color: $light;
-  position: absolute;
   bottom: 0;
 
   footer.inner {
@@ -584,6 +636,18 @@ p.bigtext {
   }
 }
 
+
+.map-loader {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-left: 0.35rem solid $blue;
+}
+
+.map-loader-status {
+  margin: 0;
+}
+
 /* ------ RESULTS PAGE ------ */
 
 .candidate-list-grid {
@@ -611,7 +675,26 @@ p.bigtext {
   color: $dark;
 
   &.favourited {
-    color: $pink;
+    color: red;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    border-radius: 2px;
+  }
+}
+
+.notes-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.25;
+  font-size: 1em;
+  color: $dark;
+
+  &.opened {
+    color: $blue;
   }
 
   &:focus-visible {
@@ -628,6 +711,14 @@ p.bigtext {
   .candidate-card {
     border: 1px solid $dark;
     margin: 0.5em;
+    position: relative;
+    overflow: hidden;
+
+    /* undo target icon */
+    a[target="_blank"]::after { 
+      content: '';
+      margin-left: 0;
+    } 
 
     .title {
       background-color: $dark;
@@ -645,7 +736,7 @@ p.bigtext {
 
       .identity {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.65em;
 
         .image {
@@ -685,17 +776,18 @@ p.bigtext {
 
       .name {
         position: relative;
-        padding-right: 1.5em;
+        display: flex;
+        align-items: flex-start;
       }
 
-      .favourite-btn {
-        position: absolute;
-        top: 0;
-        right: 0;
+      .interaction-buttons {
+        flex: 0 0 auto;
       }
 
       .name h3 {
-        margin: 0 0 0.2em;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0 10px 0.2em;
         font-size: 1.15em;
         line-height: 1.25;
       }
@@ -707,6 +799,7 @@ p.bigtext {
       .name h3 a:hover {
         text-decoration: underline;
         text-decoration-thickness: 0.25em;
+        color: $pink;
       }
 
       .name h3 .no-website {
@@ -734,6 +827,7 @@ p.bigtext {
         opacity: 0;
         visibility: hidden;
         height: 0;
+        width: 0;
       }
 
       .voting-result p {
@@ -749,6 +843,14 @@ p.bigtext {
           color: $dark;
         }
       }
+
+      .notes-container.open { 
+
+        .auto-resize-textarea { 
+          border: 0.1em solid black;
+          padding: 0.25em;
+        } 
+      } 
     }
 
     .contact {
@@ -792,6 +894,23 @@ p.bigtext {
           }
         }
       }
+    }
+
+    .withdrawn-stamp {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-18deg);
+      padding: 0.1em 0.7em;
+      border: 3px solid currentColor;
+      color: black;
+      background: rgba(255, 255, 255, 0.6);
+      font-size: 1em;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      z-index: 1;
     }
   }
 }
@@ -1000,6 +1119,17 @@ body {
     }
   }
 
+  a[target="_blank"]::after { 
+    /* https://docs.fontawesome.com/web/add-icons/pseudo-elements/ */
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font: var(--fa-font-solid);
+    content: '\f35d';
+    margin-left: 0.25em;
+    font-size: smaller;
+  } 
+
   img {
     border: none;
     box-shadow: none;
@@ -1178,7 +1308,7 @@ body {
     }
 
     a {
-      color: $light;
+      color: $light !important;
       font-weight: bold;
     }
 
@@ -1213,44 +1343,6 @@ body {
     &[aria-expanded="true"]::after {
       content: " ▲";
     }
-  }
-
-  .worksheets-panel {
-    position: fixed;
-    z-index: 100;
-    max-width: 320px;
-    width: min(320px, 90vw);
-    box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.35);
-    overflow-y: auto;
-    max-height: 70vh;
-  }
-
-  .worksheets-close {
-    float: right;
-    background: transparent;
-    border: 1px solid currentColor;
-    color: inherit;
-    font-size: 1.5em;
-    cursor: pointer;
-    padding: 0.1em 0.4em;
-    line-height: 1;
-    margin-left: 0.5em;
-  }
-
-  .worksheets-collapse-hint {
-    float: none;
-    display: block;
-    border-color: currentColor;
-    border-left: none;
-    border-right: none;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    background: inherit;
-    font-size: 1em;
-    width: 100%;
-    text-align: center;
-    margin-top: 0.5em;
-    opacity: 0.7;
   }
 
   .standout-box {
@@ -1502,7 +1594,8 @@ body {
 
   #header_wrap,
   #main-menu,
-  #footer_wrap {
+  #footer_wrap,
+  #worksheet-no-js-warning {
     display: none;
   }
 
@@ -1530,10 +1623,6 @@ body {
     font-size: 0.7em;
   }
 
-  #worksheet-no-js-warning { 
-    display: none;
-  }
-
   table.candidate-worksheet {
     width: 100%;
     border-collapse: collapse;
@@ -1545,7 +1634,7 @@ body {
       display: block;
       margin: auto;
 
-      i.fa-regular { 
+      i.fa-regular {
         display: none;
       }
     }

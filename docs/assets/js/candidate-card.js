@@ -20,17 +20,23 @@ function removeFavourite(candidate) {
     localStorage.setItem(WRV_FAVOURITE_KEY, JSON.stringify(favourites));
 }
 
+
+function setFavouriteState(btn, isFavourited) {
+    btn.toggleClass("favourited", isFavourited);
+    btn.attr("aria-pressed", String(isFavourited));
+    btn.find("i")
+        .toggleClass("fa-solid", isFavourited)
+        .toggleClass("fa-regular", !isFavourited);
+}
+
 function updateFavourites() {
     var favouritedCandidates = parseFavourites();
     $(".favourite-btn[data-candidate-id]").each(function () {
         var btn = $(this);
-        if (favouritedCandidates.includes(btn.attr("data-candidate-id"))) {
-            btn.addClass("favourited");
-            btn.find("i").removeClass("fa-regular").addClass("fa-solid");
-        } else {
-            btn.removeClass("favourited");
-            btn.find("i").removeClass("fa-solid").addClass("fa-regular");
-        }
+        setFavouriteState(
+            btn,
+            favouritedCandidates.includes(btn.attr("data-candidate-id")),
+        );
     });
 }
  
@@ -74,14 +80,31 @@ $(document).ready(function () {
 
     $(".favourite-btn").on("click", function () {
         var candidate = $(this).attr("data-candidate-id");
-        $(this).toggleClass("favourited");
-        var icon = $(this).find("i");
-        if ($(this).hasClass("favourited")) {
-            icon.removeClass("fa-regular").addClass("fa-solid");
-            saveFavourite(candidate);
-        } else {
-            icon.removeClass("fa-solid").addClass("fa-regular");
+        
+        var btn = $(this);
+        if (btn.hasClass("favourited")) {
+            setFavouriteState(btn, false);
             removeFavourite(candidate);
+        } else {
+            setFavouriteState(btn, true);
+            saveFavourite(candidate);
+        }
+
+    });
+
+    $(".notes-btn").on("click", function () {
+        var candidate = $(this).attr("data-candidate-id");
+        $(this).toggleClass("opened");
+        var icon = $(this).find("i");
+        var notes = $(`.auto-resize-textarea[data-candidate-id='${candidate}']`);
+        if (notes) { 
+            if ($(this).hasClass("opened")) {
+                icon.removeClass("fa-regular").addClass("fa-solid");
+                notes.closest(".notes-container").addClass("open");
+            } else {
+                icon.removeClass("fa-solid").addClass("fa-regular");
+                notes.closest(".notes-container").removeClass("open");
+            }
         }
     });
 

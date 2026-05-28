@@ -3,13 +3,17 @@
 where:"PositionUniqueName",include.winner["PositionUniqueName"] | first -%}
 
 {% assign position_title = race-info["ShortLocalDesc"] %}
+{% assign is_withdrawn = include.winner["Withdrawn"] == "Y" %}
 
 <div class="grid-item">
-    <div class="candidate-card">
+    <div class="candidate-card{% if is_withdrawn %} withdrawn{% endif %}">
+        {% if is_withdrawn %}
+            <div class="withdrawn-stamp">Candidate withdrawn</div>
+        {% endif %}
         {% if include.heading and include.heading == "yes" %}
-        <div class="title">
-            {{ position_title }}
-        </div>
+            <div class="title">
+                {{ position_title }}
+            </div>
         {% endif %}
         <div class="card-content">
             <div class="identity">
@@ -32,11 +36,18 @@ where:"PositionUniqueName",include.winner["PositionUniqueName"] | first -%}
                         <div class="tooltip hidden" role="tooltip" id="{{ include.winner['UniqueID'] }}-tooltip">{{ full_name }} does not
                             have a listed website yet.</div>
                         {% endif %}
+                        <div class="interaction-buttons">
+                        <button class="notes-btn" data-candidate-id="{{ include.winner['UniqueID'] }}"
+                            aria-label="Edit notes for {{ full_name }}">
+                            <i class="fa-regular fa-clipboard" aria-hidden="true"></i>
+                        </button>
                         <button class="favourite-btn" data-candidate-id="{{ include.winner['UniqueID'] }}"
+                            aria-pressed="false"
                             aria-label="Favourite {{ full_name }}">
                             <i class="fa-regular fa-heart" aria-hidden="true"></i>
                         </button>
-                    </div>
+                        </div>
+                   </div>
                     {% if include.winner["Votes"] and include.winner["Percentage"] %}
                     {% assign percentage = include.winner["Percentage"] | append:"%" %}
                     <div class="voting-result">
@@ -186,9 +197,10 @@ where:"PositionUniqueName",include.winner["PositionUniqueName"] | first -%}
                         {% endif %}
 
                     </div>
-
-                    <div class="auto-resize-textarea" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes for {{ full_name }}" data-candidate-id="{{ include.winner['UniqueID'] }}"></div>
                 </div>
+            </div>
+            <div class="notes-container">
+                <div class="auto-resize-textarea" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes for {{ full_name }}" data-candidate-id="{{ include.winner['UniqueID'] }}"></div>
             </div>
         </div>
         <br class="textonly" /><br class="textonly" />

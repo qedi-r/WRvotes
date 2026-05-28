@@ -6,7 +6,7 @@ use-leaflet: true
 
 <section class="flex justify-center">
   <article class="standout-box blue large">
-    <div class="big-text header" id="map-box" data-aos="fade-left">
+    <div class="big-text header" id="map-box" >
     The Municipal Election was October 22, 2022
     </div>
     <p>Use this website to learn about the municipal election, and the
@@ -30,6 +30,11 @@ use-leaflet: true
      pretty good, it is not 100% accurate, especially near ward
      boundaries. If in doubt consult your <a
      href="https://wrvotes.com" target="_blank">municipality</a>.)</p>
+     <div class="map-loader" aria-live="polite" data-baseurl="{{ site.baseurl }}">
+       <p id="map-loader-status" class="map-loader-status">
+         Loading the interactive ward map.
+       </p>
+     </div>
      <div id="map-searchbar"></div>
      <div id="map"></div>
      <p><strong>Note:</strong> The map loads more slowly than the rest
@@ -38,9 +43,4 @@ use-leaflet: true
   </article>
 </section>
 
-<script src="{{ site.baseurl }}/assets/js/leaflet.js"></script>
-<script src="{{ site.baseurl }}/assets/js/leaflet-search.min.js"></script>
-<!-- This has too many dependencies to load locally. -->
-<script src="https://unpkg.com/leaflet-pip@1.1.0/leaflet-pip.js"></script>
-<script src="{{ site.baseurl }}/assets/js/jquery-3.6.0.min.js"></script>
-<script src="{{ site.baseurl }}/assets/js/show-map.js"></script>
+<script defer src="{{ site.baseurl }}/assets/js/home-map-loader.js"></script>
