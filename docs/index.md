@@ -38,7 +38,7 @@ use-leaflet: true
      <div id="map-searchbar"></div>
      <div id="map"></div>
      <p><strong>Note:</strong> The map loads more slowly than the rest
-     of the page, so be patient, or use the <a href="/wards/">ward listing</a>.</p>
+     of the page, so be patient, or use the <a href="/by-ward/">ward listing</a>.</p>
     </div>
   </article>
 </section>
