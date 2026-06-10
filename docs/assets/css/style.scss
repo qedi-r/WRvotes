@@ -1574,6 +1574,11 @@ body {
       display: flex;
       flex-direction: column;
     }
+
+    #footer_wrap .footer-columns ul li { 
+      /* increase spacing on mobile */
+      padding-top: 1em;
+    } 
   }
 }
 
