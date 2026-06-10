@@ -177,7 +177,7 @@ if changed_files:
     debug(commit_msg, 1)
 
     changed_with_path = map(
-      lambda x: "{}/{}".format(config['targedir'], x),
+      lambda x: "{}/{}".format(config['targetdir'], x),
       changed_files)
 
     repo.index.add(changed_with_path)
