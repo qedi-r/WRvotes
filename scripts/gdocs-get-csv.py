@@ -7,117 +7,95 @@ import sys
 import time
 import datetime
 import argparse, sys, os
+import yaml
 from git import Repo
+from google.oauth2 import service_account
+import googleapiclient.discovery
 
 """ Grab data files from Google docs
     Paul "Worthless" Nijjar, 2019-09-22
 """
 
 TMPDIR=tempfile.TemporaryDirectory()
+DEBUG_DEFAULT_LEVEL = 2
 
-DEBUG_DEFAULT_LEVEL=2
 
+# ------ PARSE ARGS -------
+parser = argparse.ArgumentParser(
+  description = "Pull WaterlooRegionVotes files from the INTERNET and"
+      " convert to csv files"
+  )
 
-# --- Copy and paste ridiculous config code
-# See: http://www.karoltomala.com/blog/?p=622
-DEFAULT_CONFIG_SOURCEFILE = os.path.join(
-    os.getcwd(),
-    'gdocs-get-csv.config.py',
-    )
+parser.add_argument("--configfile",
+  help = "Where to find the config YAML",
+  required = True,
+  )
+parser.add_argument("--debuglevel",
+  help = "How verbose to be. Higher is more verbose.",
+  type = int,
+  default = 2,
+  )
+args = parser.parse_args()
 
+# ---------------------------------
+def load_config():
+    # From:
+    # https://dev.to/jmarhee/using-pyyaml-to-support-yaml-and-json-configuration-files-in-your-cli-tools-1694
+
+    with open(args.configfile, "r") as c:
+        cfg = yaml.safe_load(c)
+        return cfg
 
 
 # ------------------------------
-def load_config(configfile=None):
-    """ Load configuration definitions.
-       (This is really scary, actually. We are trusting that the 
-       config.py we are taking as input is sane!) 
+def auth_to_google():
+    # From: https://developers.google.com/api-client-library/python/auth/service-accounts
+    SCOPES=['https://www.googleapis.com/auth/calendar']
 
-       If both the commandline and the parameter are 
-       specified then the commandline takes precedence.
-
-       Stolen from my google calendar helpers. 
-    """
-
-    config_location=None
-
-    if configfile: 
-        config_location=configfile
-    else: 
-        config_location = DEFAULT_CONFIG_SOURCEFILE
-
-    # Now parse commandline options (Here??? This code smells bad.)
-    parser = argparse.ArgumentParser(
-        description="Synchronize from Google Docs to "
-            "local csv files",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        )
-    parser.add_argument('-c', '--configfile', 
-        help='configuration file location',
-        default=DEFAULT_CONFIG_SOURCEFILE,
+    credentials = service_account.Credentials.from_service_account_file(
+        config['service_credentials'],
+        scopes=[],
         )
 
-    args = parser.parse_args()
-    if args.configfile:
-        config_location = os.path.abspath(args.configfile)
+    cal_object = googleapiclient.http.build_http()
+    return cal_object
 
-    # http://stackoverflow.com/questions/11990556/python-how-to-make-global 
-    global config
 
-    # Blargh. You can load modules from paths, but the syntax is
-    # different depending on the version of python. 
-    # http://stackoverflow.com/questions/67631/how-to-import-a-mod
-    # https://stackoverflow.com/questions/1093322/how-do-i-ch
-
-    if sys.version_info >= (3,5): 
-        import importlib.util 
-        spec = importlib.util.spec_from_file_location(
-            'config',
-            config_location,
-            )
-        config = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(config)
-    elif sys.version_info >= (3,3):
-        # This is the only one I can test. Sad!
-        from importlib.machinery import SourceFileLoader
-        config = SourceFileLoader( 'config', config_location,).load_module()
-    else:
-        import imp
-        config = imp.load_source( 'config', config_location,)
-
-    if config.DEBUG_DEFAULT_LEVEL:
-        DEBUG_DEFAULT_LEVEL = config.DEBUG_DEFAULT_LEVEL
-
-    # For test harness
-    return config
-            
-
-# --- FUNCTIONS --
-
+# ------------------------------------
 def setup_debug_log():
-    if config.DEBUG_LOG:
+    # Better hope this is not an error!
+    dbg = config['debug']
+
+    if dbg['log']['enable']:
         global DEBUG_FILEHANDLE
-        DEBUG_FILEHANDLE = open(config.DEBUG_FILE, 'a', newline='') 
+        target = dbg['log']['logfile']
+        DEBUG_FILEHANDLE = open(target, 'a', newline='') 
         # What if this fails?
         if not DEBUG_FILEHANDLE:
-            print("Unable to write to {}".format(config.DEBUG_FILE))
+            print("Unable to write to {}".format(target))
             sys.exit(1)
 
+    if 'level' in dbg['default']:
+        DEBUG_DEFAULT_LEVEL = dbg['default']['level']
 
 
+# ------------------------------------
 def debug(msg,level=DEBUG_DEFAULT_LEVEL):
     """ Add debug information to screen and or file. """
 
-    if config.DEBUG_SCREEN and level <= config.DEBUG_SCREEN_THRESHOLD:
+    if config['debug']['screen']['enable'] and \
+      level <= config['debug']['screen']['threshold']:
         print(msg)
 
-    if config.DEBUG_LOG and level <= config.DEBUG_LOG_THRESHOLD:
+    if config['debug']['log']['enable'] and \
+      level <= config['debug']['log']['threshold']:
         DEBUG_FILEHANDLE.write("{}: ".format(
           datetime.datetime.now())
           )
         DEBUG_FILEHANDLE.write(msg)
         DEBUG_FILEHANDLE.write('\n')
 
+# ------------------------------------
 def cleanup():
     """ Clean up file handles. """
     if DEBUG_FILEHANDLE:
@@ -125,14 +103,16 @@ def cleanup():
 
 # --- END FUNCTIONS ---
 
-load_config()
+global config
+config = load_config()
 setup_debug_log()
+creds = auth_to_google()
 
 debug("---- Beginning run ----",1)
 
 changed_files = []
 
-sources = config.SOURCES
+sources = config['sources']
 
 for syncfile in sources:
     debug("file: {}, target: {}".format(
@@ -150,13 +130,15 @@ for syncfile in sources:
 
         candidate="{}/{}".format(TMPDIR.name,syncfile)
 
+        # There is a problem here. Google sheets add ^M to the end as
+        # newlines. 
         with open(candidate, 'wb') as f:
             f.write(r.content)
             f.close()
 
         origfile="{}/{}/{}".format(
-          config.GITDIR,
-          config.TARGETDIR,
+          config['gitdir'],
+          config['targetdir'],
           syncfile)
 
         if not filecmp.cmp(candidate, origfile):
@@ -183,7 +165,7 @@ for syncfile in sources:
              )
 
 if changed_files:
-    repo = Repo(config.GITDIR)
+    repo = Repo(config['gitdir'])
     origin = repo.remote('origin')
     origin.pull()
 
@@ -195,7 +177,7 @@ if changed_files:
     debug(commit_msg, 1)
 
     changed_with_path = map(
-      lambda x: "{}/{}".format(config.TARGETDIR, x),
+      lambda x: "{}/{}".format(config['targedir'], x),
       changed_files)
 
     repo.index.add(changed_with_path)

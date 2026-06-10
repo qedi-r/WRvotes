@@ -1,0 +1,48 @@
+
+
+# Should be generated as a service account .json file
+# in https://console.cloud.google.com/iam-admin/serviceaccounts/ 
+# then Keys
+# 
+# You need to create a NEW key and get the JSON for it. 
+#
+service_credentials: '/home/pnijjar/src/WRVotesPlaceholder/scripts/secrets/waterlooregionvotes-212715-23a08f963ed7.json'
+
+
+# format: localfile: remotesource
+
+# The important thing for each sheet is the gid. Look for the
+# gid=<...> parameter when selecting the tab in the spreadsheet.
+
+# General format: 
+# https://docs.google.com/spreadsheets/d/<Spreadsheet ID>/export?format=csv&gid=<Sheet ID>
+# For example: 
+# https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1636140461
+
+
+sources:
+  'events.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=597743808'
+  'media.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1354879912'
+#  'nominees.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1636140461'
+
+
+
+# The root of the git config file
+gitdir: /home/pnijjar/src/WRVotesPlaceholder
+
+# The path to the CSV files, relative to GITDIR
+targetdir: docs/_data/sync
+
+# Assorted debugging parameters. 
+# Higher thresholds are more verbose.
+debug:
+  screen:
+    enable: true
+    threshold: 4
+  log: 
+    enable: true
+    logfile: /tmp/gdocs-get.log
+    threshold: 1
+  default:
+    level: 3
+
