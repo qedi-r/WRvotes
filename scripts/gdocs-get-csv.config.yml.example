@@ -1,4 +1,14 @@
 
+# GitHub authentication is done via an SSH key.
+# I think this cannot have a passphrase (ugh).
+# 
+# In GitHub I add the public key as a deploy key in 
+#   https://github.com/CivicTechWR/WRvotes/settings/keys 
+# for the WRvotes repo
+# 
+# Specify the full path to the ssh key here:
+github_ssh_key: '/home/pnijjar/.ssh/id_rsa_wrv_deploy'
+
 
 # Should be generated as a service account .json file
 # in https://console.cloud.google.com/iam-admin/serviceaccounts/ 

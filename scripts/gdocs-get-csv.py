@@ -165,24 +165,31 @@ for syncfile in sources:
              )
 
 if changed_files:
-    repo = Repo(config['gitdir'])
-    origin = repo.remote('origin')
-    origin.pull()
+    try: 
+        ssh_cmd = "ssh -i {}".format(config['github_ssh_key'])
+        repo = Repo(config['gitdir'])
+        with repo.git.custom_environment(GIT_SSH_COMMAND=ssh_cmd):
+
+            origin = repo.remote('origin')
+            origin.pull()
 
 
-    commit_msg = "Auto-commit: updated "
-    commit_msg += "{} from Google Docs".format( 
-                     ", ".join(changed_files))
+            commit_msg = "Auto-commit: updated "
+            commit_msg += "{} from Google Docs".format( 
+                             ", ".join(changed_files))
 
-    debug(commit_msg, 1)
+            debug(commit_msg, 1)
 
-    changed_with_path = map(
-      lambda x: "{}/{}".format(config['targetdir'], x),
-      changed_files)
+            changed_with_path = map(
+              lambda x: "{}/{}".format(config['targetdir'], x),
+              changed_files)
 
-    repo.index.add(changed_with_path)
-    repo.index.commit(commit_msg)
-    origin.push()
+            repo.index.add(changed_with_path)
+            repo.index.commit(commit_msg)
+            origin.push()
+    except Exception as e: 
+        debug("Git exception:\n{}".format(e), 0)
+        raise
 else:
     debug("All files are the same. Not committing.", 2)
 
