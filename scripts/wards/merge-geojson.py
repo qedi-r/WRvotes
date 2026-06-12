@@ -19,6 +19,8 @@ from shapely.geometry import shape, mapping, MultiPolygon
 # ** denotes old shapefile used from 2022 election, visual inspection with boundaries done via links above
 
 DIR = os.path.dirname(os.path.abspath(__file__))
+INTERNAL_DIR = os.path.abspath(os.path.join(DIR, "..", "..", "docs", "_data", "internal"))
+DATA_DIR = os.path.abspath(os.path.join(DIR, "..", "..", "docs", "assets", "data"))
 
 STYLE = {
     "stroke-opacity": 1,
@@ -162,8 +164,7 @@ def load_features_with_sources():
     # Load all features, tracking which source each came from
     indexed = []  # list of (source_idx, feature)
     for source_idx, (path, normalize) in enumerate(sources):
-        if not os.path.isabs(path):
-            path = os.path.join(DIR, path)
+        path = os.path.join(INTERNAL_DIR, path)
         data = load(path)
         for feature in data["features"]:
             if feature["type"] == "Feature":
@@ -224,7 +225,7 @@ def find_and_clip_overlaps(indexed):
                             "information-link": (
                                 f"Properties in this area may be eligible to vote in "
                                 f"<strong>{a_name}</strong> and/or <strong>{b_name}</strong>. "
-                                f"Contact the <a mailto='clerks@kitchener.ca'>Kitchener</a> and <a mailto='clerks@waterloo.ca'>Waterloo</a> clerk offices to confirm which ward applies to your address.<br/>"
+                                f"Contact the <a href='mailto:clerks@kitchener.ca'>Kitchener</a> and <a mailto='clerks@waterloo.ca'>Waterloo</a> clerk offices to confirm which ward applies to your address.<br/>"
                                 f"{link_a}<br/>"
                                 f"{link_b} "
                             ),
@@ -247,7 +248,7 @@ def rebuild_features(indexed_geometries, overlap_zones):
 
 def output_features(features, overlap_zone_len):
     output = {"type": "FeatureCollection", "features": features}
-    out_path = os.path.join(DIR, "WardBoundaries.geojson")
+    out_path = os.path.join(DATA_DIR, "WardBoundaries.geojson")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2)
 
