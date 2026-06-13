@@ -19,7 +19,7 @@ from shapely.geometry import shape, mapping, MultiPolygon
 # ** denotes old shapefile used from 2022 election, visual inspection with boundaries done via links above
 
 DIR = os.path.dirname(os.path.abspath(__file__))
-INTERNAL_DIR = os.path.abspath(os.path.join(DIR, "..", "..", "docs", "_data", "internal"))
+INTERNAL_DIR = os.path.abspath(os.path.join(DIR, "..", "..", "docs", "_data", "internal", "geojson_src"))
 DATA_DIR = os.path.abspath(os.path.join(DIR, "..", "..", "docs", "assets", "data"))
 
 STYLE = {
