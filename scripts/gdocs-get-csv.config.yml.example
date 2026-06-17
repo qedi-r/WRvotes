@@ -19,9 +19,7 @@ github_ssh_key: '/home/pnijjar/.ssh/id_rsa_wrv_deploy'
 service_credentials: '/home/pnijjar/src/WRVotesPlaceholder/scripts/secrets/waterlooregionvotes-212715-23a08f963ed7.json'
 
 
-# format: localfile: remotesource
-
-# The important thing for each sheet is the gid. Look for the
+# The important thing for each remotesrc sheet is the gid. Look for the
 # gid=<...> parameter when selecting the tab in the spreadsheet.
 
 # General format: 
@@ -29,19 +27,38 @@ service_credentials: '/home/pnijjar/src/WRVotesPlaceholder/scripts/secrets/water
 # For example: 
 # https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1636140461
 
+# Assume every source ends with .csv
 
 sources:
-  'events.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=597743808'
-  'media.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1354879912'
-#  'nominees.csv': 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1636140461'
+  'nominees': 
+    folder: sync
+    key: UniqueID
+  'events': 
+    folder: sync
+    key: RowID
+    remotesrc: 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=597743808'
+  'media': 
+    folder: sync
+    key: URL
+    remotesrc: 'https://docs.google.com/spreadsheets/d/1IyaCHY-17J3CFfYHMw_Gx1llWfxoBb2p5O1oY94EXYI/export?format=csv&gid=1354879912'
+  'position-tags': 
+    folder: internal
+    key: PositionUniqueName
+  'media-categories': 
+    folder: internal
+    key: CategoryName
+  'aliases': 
+    folder: internal
+    key: Alias
 
-
+# Used for parsing dates
+timezone: 'America/Toronto'
 
 # The root of the git config file
-gitdir: /home/pnijjar/src/WRVotesPlaceholder
+gitdir: /home/pnijjar/src/wrvotes-dup
 
 # The path to the CSV files, relative to GITDIR
-targetdir: docs/_data/sync
+targetdir: docs/_data/
 
 # Assorted debugging parameters. 
 # Higher thresholds are more verbose.
@@ -53,6 +70,8 @@ debug:
     enable: true
     logfile: /tmp/gdocs-get.log
     threshold: 1
+  errors:
+    level: 0
   default:
     level: 3
 

@@ -20,23 +20,24 @@ errors = []
 DEBUG_DEFAULT_LEVEL = 2
 
 # ------ PARSE ARGS -------
-parser = argparse.ArgumentParser(
-  description = "Analyse CSV files for errors"
-  )
+def parse_args_linter():
+    parser = argparse.ArgumentParser(
+      description = "Analyse CSV files for errors"
+      )
 
-parser.add_argument("--configfile",
-  help = "Where to find the config YAML",
-  required = True,
-  )
-parser.add_argument("--debuglevel",
-  help = "How verbose to be. Higher is more verbose.",
-  type = int,
-  default = 2,
-  )
-args = parser.parse_args()
+    parser.add_argument("--configfile",
+      help = "Where to find the config YAML",
+      required = True,
+      )
+    parser.add_argument("--debuglevel",
+      help = "How verbose to be. Higher is more verbose.",
+      type = int,
+      default = 2,
+      )
+    return parser.parse_args()
 
 # ---------------------------------
-def load_config():
+def load_config(args):
     # From:
     # https://dev.to/jmarhee/using-pyyaml-to-support-yaml-and-json-configuration-files-in-your-cli-tools-1694
 
@@ -165,7 +166,7 @@ def check_nominees():
 def check_media():
 
     # Nothing could possibly go wrong with this.
-    date_format = re.compile('^\d\d\d\d-\d\d-\d\d$')
+    date_format = re.compile(r'^\d\d\d\d-\d\d-\d\d$')
 
 
     for media_id in d['media']:
@@ -296,68 +297,75 @@ def check_position_id_list(plist, source_csv, record):
 
 
 # --------------------
+def run_linter(cfg):
+    """ Load CSV files and launch linter"""
+
+    global config
+    config = cfg
+
+    setup_debug_log()
+
+
+    for csv_src in config['sources']:
+       filepath = os.path.join(
+         config['gitdir'],
+         config['targetdir'],
+         config['sources'][csv_src]['folder'],
+         "{}.{}".format(csv_src, 'csv'),
+         )
+
+       debug("Filepath for {} is {}".format(
+         csv_src,
+         filepath,
+         ), 4)
+
+       d[csv_src] = {}
+
+       with open (filepath, encoding='utf-8') as f:
+           reader = csv.DictReader(f)
+           key_id = config['sources'][csv_src]['key']
+
+
+           for row in reader:
+               if not key_id in row or row[key_id] == '':
+                   err(
+                     csv_src,
+                     "Missing unique key '{}'".format(key_id),
+                     row,
+                     )
+                   continue
+
+               if row[key_id] in d[csv_src]:
+                   err(
+                     csv_src, 
+                     "Duplicate key {}".format(row[key_id]),
+                     row,
+                     )
+               d[csv_src][row[key_id]] = row
+
+       debug("{}: Read {} records".format(
+         csv_src,
+         len(d[csv_src]),
+         ), 3)
+       
+    check_nominees()
+    check_media()
+    check_events()
+
+    num_errors = len(errors)
+    if num_errors > 0:
+        debug("TOTAL: Found {} errors".format(num_errors),0)
+
 # --------------------
 # --------------------
 # --------------------
 # --- END FUNCTIONS ---
 
-global config
-config = load_config()
-setup_debug_log()
+if __name__ == "__main__":
+    args = parse_args_linter()
+    cfg = load_config(args)
+    run_linter(cfg)
+    
 
 
-for csv_src in config['sources']:
-   filepath = os.path.join(
-     config['gitdir'],
-     config['targetdir'],
-     config['sources'][csv_src]['folder'],
-     "{}.{}".format(csv_src, 'csv'),
-     )
-
-   debug("Filepath for {} is {}".format(
-     csv_src,
-     filepath,
-     ), 4)
-
-   d[csv_src] = {}
-
-   with open (filepath, encoding='utf-8') as f:
-       reader = csv.DictReader(f)
-       key_id = config['sources'][csv_src]['key']
-
-
-       for row in reader:
-           if not key_id in row or row[key_id] == '':
-               err(
-                 csv_src,
-                 "Missing unique key '{}'".format(key_id),
-                 row,
-                 )
-               continue
-
-           if row[key_id] in d[csv_src]:
-               err(
-                 csv_src, 
-                 "Duplicate key {}".format(row[key_id]),
-                 row,
-                 )
-           d[csv_src][row[key_id]] = row
-
-           
-           
-
-   debug("{}: Read {} records".format(
-     csv_src,
-     len(d[csv_src]),
-     ), 3)
-   
-check_nominees()
-check_media()
-check_events()
-
-#debug("Event looks like: {}".format(d['events']['101']), 0)
-   
-num_errors = len(errors)
-if num_errors > 0:
-    debug("TOTAL: Found {} errors".format(num_errors))
 
