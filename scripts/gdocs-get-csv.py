@@ -116,9 +116,9 @@ def debug(msg,level=DEBUG_DEFAULT_LEVEL):
 def download_csvs():
     creds = auth_to_google()
 
-    debug("---- Beginning run ----",1)
 
     changed_files = []
+    committed_changes = False
 
     sources = config['sources']
 
@@ -156,7 +156,7 @@ def download_csvs():
                     debug("Found different files: "
                           "{}. Overwriting.".format(syncfile),
                          2)
-                    changed_files.append(syncfile)
+                    changed_files.append(origfile)
 
                     with open(origfile, 'wb') as f_orig:
                         f_orig.write(r.content)
@@ -187,27 +187,28 @@ def download_csvs():
                     origin = repo.remote('origin')
                     origin.pull()
 
+                    changed_filenames = map(
+                      lambda x: os.path.basename(x),
+                      changed_files
+                      )
 
                     commit_msg = "Auto-commit: updated "
                     commit_msg += "{} from Google Docs".format( 
-                                     ", ".join(changed_files))
+                                     ", ".join(changed_filenames))
 
                     debug(commit_msg, 1)
 
-                    changed_with_path = map(
-                      lambda x: "{}/{}".format(config['targetdir'], x),
-                      changed_files)
-
-                    repo.index.add(changed_with_path)
+                    repo.index.add(changed_files)
                     repo.index.commit(commit_msg)
                     origin.push()
+                    committed_changes = True
             except Exception as e: 
                 debug("Git exception:\n{}".format(e), 0)
                 raise
     else:
         debug("All files are the same. Not committing.", 2)
 
-    debug("---- Completed run ----",1)
+    return committed_changes
 
 
 # ------------------------------------
@@ -223,14 +224,18 @@ global config
 config = load_config(args)
 setup_debug_log()
 
+debug("---- Beginning run ----",1)
+
+did_push = False
+
 if not config['no_download']:
-    download_csvs()
+    did_push = download_csvs()
 
-# The CSV checker does its own debug script. Ugh I should
-# just use the logging module instead of this.
+# Check only on changed files, so that we do not get super-spammed with errors
+if did_push and not config['no_lint']:
+    csv_lint.run_linter(config, DEBUG_FILEHANDLE)
+
+debug("---- Completed run ----",1)
+
 cleanup()
-
-if not config['no_lint']:
-    csv_lint.run_linter(config)
-
 

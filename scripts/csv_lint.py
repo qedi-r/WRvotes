@@ -17,6 +17,8 @@ import dateutil.parser, pytz, datetime
 d = {}
 errors = []
 
+i_set_debug_filehandle = False
+
 DEBUG_DEFAULT_LEVEL = 2
 
 # ------ PARSE ARGS -------
@@ -63,6 +65,7 @@ def setup_debug_log():
     if 'level' in dbg['default']:
         DEBUG_DEFAULT_LEVEL = dbg['default']['level']
 
+    i_set_debug_filehandle = True
 
 # --------------------
 def debug(msg,level=DEBUG_DEFAULT_LEVEL):
@@ -97,7 +100,7 @@ def err(sourcefile, msg, record):
 # --------------------
 def cleanup():
     """ Clean up file handles. """
-    if DEBUG_FILEHANDLE:
+    if DEBUG_FILEHANDLE and i_set_debug_filehandle:
         DEBUG_FILEHANDLE.close()
 
 
@@ -297,14 +300,17 @@ def check_position_id_list(plist, source_csv, record):
 
 
 # --------------------
-def run_linter(cfg):
+def run_linter(cfg, dbg_filehandle = None):
     """ Load CSV files and launch linter"""
 
     global config
     config = cfg
 
-    setup_debug_log()
-
+    if not dbg_filehandle: 
+        setup_debug_log()
+    else:
+        global DEBUG_FILEHANDLE
+        DEBUG_FILEHANDLE = dbg_filehandle
 
     for csv_src in config['sources']:
        filepath = os.path.join(
@@ -365,6 +371,7 @@ if __name__ == "__main__":
     args = parse_args_linter()
     cfg = load_config(args)
     run_linter(cfg)
+    cleanup()
     
 
 
