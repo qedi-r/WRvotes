@@ -15,4 +15,5 @@ python3 update-google-calendar.py --configfile $4
 
 # Sample crontab entry
 # Update WRV information 
-#1,16,31,46 * * * * /home/pnijjar/WRVotesMunicipal2022/scripts/run_update_scripts.sh /home/pnijjar/WRVotesMunicipal2022/scripts/venv/ /home/pnijjar/WRVotesMunicipal2022/scripts/ /home/pnijjar/WRVotesMunicipal2022/scripts/get-csv-config.yml /home/pnijjar/WRVotesMunicipal2022/scripts/update-google-calendar.config.py >> /home/pnijjar/logs/cronjob.log
+#1,16,31,46 * * * * /home/pnijjar/WRVotesPlaceholder/scripts/run_update_scripts.sh /home/pnijjar/WRVotesPlaceholder/scripts/venv/ /home/pnijjar/WRVotesPlaceholder/scripts/ /home/pnijjar/WRVotesPlaceholder/scripts/gdocs-get-csv.config.yml /home/pnijjar/WRVotesPlaceholder/scripts/update-google-calendar.config.py | /home/pnijjar/WRVotesPlaceholder/scripts/maybe-send-mail.sh civictechwr.wrvotes@gmail.com "Google Sheets validation problem" 
+
