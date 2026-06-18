@@ -145,11 +145,14 @@ nav#toc-tabs {
 
   .tab-strip {
     display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 2px;
     min-height: 2em;
     height: auto;
 
     a {
+      display: flex;
       color: inherit;
       text-decoration: none;
 
@@ -179,7 +182,6 @@ nav#toc-tabs {
   .tab-label {
     display: flex; // Used to center text vertically
     align-items: center;
-    min-height: 100%;
     gap: 8px;
     padding: 0 1em;
     font-size: 0.875em;
@@ -393,17 +395,16 @@ table.candidate-worksheet {
   }
 }
 
-
 /* ------------ HIDE/SHOW IF NO JS -------- */
 
 /* https://www.amityweb.co.uk/blog/flash-of-jquery-hidden-content-before-js-is-called-to-hide-it
  */
-.js-enabled .show-no-js { 
+.js-enabled .show-no-js {
   display: none;
-} 
+}
 
 /* Why would AOS turn this off? Undo it. */
-.no-js [data-aos] { 
+.no-js [data-aos] {
   pointer-events: auto;
 }
 
@@ -412,21 +413,19 @@ table.candidate-worksheet {
 div.footer {
   font-size: smaller;
 
-  .sharing { 
+  .sharing {
     /* undo target icon */
-    a[target="_blank"]::after { 
-      content: '';
+    a[target="_blank"]::after {
+      content: "";
       margin-left: 0;
-    } 
+    }
   }
-
 }
 
 p.sharing a {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-
 
 #footer_wrap {
   background: $dark;
@@ -636,7 +635,6 @@ p.bigtext {
   }
 }
 
-
 .map-loader {
   margin-bottom: 1rem;
   padding: 1rem;
@@ -715,10 +713,10 @@ p.bigtext {
     overflow: hidden;
 
     /* undo target icon */
-    a[target="_blank"]::after { 
-      content: '';
+    a[target="_blank"]::after {
+      content: "";
       margin-left: 0;
-    } 
+    }
 
     .title {
       background-color: $dark;
@@ -844,13 +842,12 @@ p.bigtext {
         }
       }
 
-      .notes-container.open { 
-
-        .auto-resize-textarea { 
+      .notes-container.open {
+        .auto-resize-textarea {
           border: 0.1em solid black;
           padding: 0.25em;
-        } 
-      } 
+        }
+      }
     }
 
     .contact {
@@ -1119,16 +1116,16 @@ body {
     }
   }
 
-  a[target="_blank"]::after { 
+  a[target="_blank"]::after {
     /* https://docs.fontawesome.com/web/add-icons/pseudo-elements/ */
     display: inline-block;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     font: var(--fa-font-solid);
-    content: '\f35d';
+    content: "\f35d";
     margin-left: 0.25em;
     font-size: smaller;
-  } 
+  }
 
   img {
     border: none;
@@ -1575,10 +1572,10 @@ body {
       flex-direction: column;
     }
 
-    #footer_wrap .footer-columns ul li { 
+    #footer_wrap .footer-columns ul li {
       /* increase spacing on mobile */
       padding-top: 1em;
-    } 
+    }
   }
 }
 
