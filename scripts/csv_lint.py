@@ -199,7 +199,7 @@ def check_media():
         # 1?)
         category = m['Category']
         if category == '':
-            err('media', 'Item does not appear to have a category')
+            err('media', 'Item does not appear to have a category',m)
 
         if category not in d['media-categories']:
             err('media',
