@@ -201,7 +201,7 @@ def check_media():
         if category == '':
             err('media', 'Item does not appear to have a category',m)
 
-        if category not in d['media-categories']:
+        elif category not in d['media-categories']:
             err('media',
               "Item has category '{}', which does not "
               "appear to be a category in media-categories.csv".format(

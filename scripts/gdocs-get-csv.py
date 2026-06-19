@@ -224,18 +224,23 @@ global config
 config = load_config(args)
 setup_debug_log()
 
-debug("---- Beginning run ----",1)
+try: 
+    debug("---- Beginning run ----",1)
 
-did_push = False
+    did_push = False
 
-if not config['no_download']:
-    did_push = download_csvs()
+    if not config['no_download']:
+        did_push = download_csvs()
 
-# Check only on changed files, so that we do not get super-spammed with errors
-if did_push and not config['no_lint']:
-    csv_lint.run_linter(config, DEBUG_FILEHANDLE)
+    # Check only on changed files, so that we do not get super-spammed with errors
+    if did_push and not config['no_lint']:
+        csv_lint.run_linter(config, DEBUG_FILEHANDLE)
 
-debug("---- Completed run ----",1)
+    debug("---- Completed run ----",1)
+
+except Exception as e: 
+    debug("Got exception:\n{}".format(e), 0)
+    raise
 
 cleanup()
 
