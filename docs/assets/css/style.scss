@@ -145,11 +145,14 @@ nav#toc-tabs {
 
   .tab-strip {
     display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 2px;
     min-height: 2em;
     height: auto;
 
     a {
+      display: flex;
       color: inherit;
       text-decoration: none;
 
@@ -179,7 +182,6 @@ nav#toc-tabs {
   .tab-label {
     display: flex; // Used to center text vertically
     align-items: center;
-    min-height: 100%;
     gap: 8px;
     padding: 0 1em;
     font-size: 0.875em;

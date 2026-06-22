@@ -121,7 +121,7 @@ sometimes in tension with the text-only navigation.
                tabindex=0
                aria-selected="false"
                role="tab"
-               >{{ race-info.PositionCategory }}</label></a>
+               >{{ race-info.PositionCategory | split: "(" | last | remove: ")" | strip }}</label></a>
           <br class="textonly"/>
         {% endif %}
       {% endfor %}
@@ -161,7 +161,7 @@ sometimes in tension with the text-only navigation.
                   tabindex=0
                   aria-selected="false"
                   role="tab"
-                  >{{ race-info.PositionCategory }}</label></a>
+                  >{{ race-info.PositionCategory | split: "(" | last | remove: ")" | strip }}</label></a>
               <br class="textonly"/>
               
             {% endif %}
