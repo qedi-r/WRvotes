@@ -150,6 +150,7 @@ nav#toc-tabs {
     gap: 2px;
     min-height: 2em;
     height: auto;
+    scrollbar-color: var(--blue) $white;
 
     a {
       display: flex;
