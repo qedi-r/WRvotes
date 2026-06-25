@@ -1,6 +1,16 @@
 var WRV_FAVOURITE_KEY = "wrv-favourited";
 var WRV_NOTE_PREFIX = "wrv-note-";
 
+function clearSavedCandidateData() {
+    localStorage.removeItem(WRV_FAVOURITE_KEY);
+
+    Object.keys(localStorage).forEach(function (key) {
+        if (key.startsWith(WRV_NOTE_PREFIX)) {
+            localStorage.removeItem(key);
+        }
+    });
+}
+
 function parseFavourites() {
     var favouritesRaw = localStorage.getItem(WRV_FAVOURITE_KEY);
     return favouritesRaw ? JSON.parse(favouritesRaw) : [];
@@ -53,6 +63,8 @@ function updateNotes() {
         var saved = loadNote($(this).attr("data-candidate-id"));
         if (saved) {
             $(this).html(saved);
+        } else { 
+            $(this).html("");
         }
     });
 }
@@ -112,12 +124,27 @@ $(document).ready(function () {
     updateFavourites();
 
     window.addEventListener("storage", (event) => {
+        console.log("Storage event detected " + event.key);
         if (event.key === WRV_FAVOURITE_KEY) {
             updateFavourites();
         } else if (event.key.startsWith(WRV_NOTE_PREFIX)) {
             updateNotes();
         }
     });
+
+    $(".clear-saved-candidate-data").each(function() { 
+            this.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                if (window.confirm("Clear all saved notes and favourites? This will remove them from this browser and cannot be undone.")) {
+                    clearSavedCandidateData();
+                    window.location.reload();
+                }
+            });
+
+            this.parentElement.removeAttribute("hidden");
+        });
+
 
     $("#worksheet-no-js-warning").hide();
 });
