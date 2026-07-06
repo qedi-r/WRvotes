@@ -52,8 +52,7 @@ school boards.
 4. Visit the page on our website corresponding to your township or
 city ward. This will list all the candidates for all positions that we
 know about. In the introductory paragraph there is also a link to a
-"Candidate Worksheet" you can open. This page **lists all the
-candidates**.
+**candidate worksheet** you can open and use for taking notes.
 
 You can print the worksheet or take notes in your web browser as you
 do your research. 
