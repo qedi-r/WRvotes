@@ -1,0 +1,36 @@
+{% comment %}
+This is gross. You should have one entry per IssueName in
+issue-categories.csv . 
+
+Write descriptions in Markdown. 
+Don't indent too much or you will get <pre> tags.
+{% endcomment %}
+
+{% assign categories = site.data.internal.issue-categories %}
+
+{% if include.category == "WaterCapacity" %}
+
+In December 2025 Waterloo Region identified a water capacity issue
+at the Mannheim Water Treatment Plant. 
+
+The region has published a proposed [Timeline of
+Solutions](https://www.regionofwaterloo.ca/programs-and-services/water-and-wastewater/mannheim-service-area-water-capacity-information-hub/timeline-of-solutions/)
+to resolve the issue by 2031. 
+
+Drinking water supply is a **regional** issue, but it affects
+development in the **cities** and **townships**, which issue
+development permits. 
+
+{% elsif include.category == "HomelessEncampment" %}
+
+There have been several controversial homelesss encampments in the
+region. One at 100 Victoria St in Kitchener has been subject to a
+provincial lawsuit. 
+Both **regional** and **city** governments are trying to deal with
+this problem.
+  
+{% else %}
+
+Oops! No description found for {{ include.category }}!
+
+{% endif %}

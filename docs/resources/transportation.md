@@ -66,9 +66,6 @@ different and sometimes confusing is this dual ownership.
 </div>
 </div>
 
-## Media coverage
-
-{% include list-issue-media.html tag="transportation" %}
 
 </div>
 </div>

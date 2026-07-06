@@ -20,6 +20,13 @@ Voters](./voter-info) page.
   What are trustees? What do they do? Which school board do you vote
   for?
 - [Municipal Government Overview](./municipal-structure): About roles
-  in the Region's two-tier government.
+  in the Region's two-tier government. You can read about specific
+  breakdowns in the roles from the links below.
+    + [Budgets and Taxation](./budgets-and-taxation): About property
+      taxes and who spends what.
+    + [Transportation](./transportation): About roads and transit.
+    + [Housing](./housing): About municipal roles in housing.
+    + [Infrastructure](./infrastructure): About water, roads, and waste
+      management.
 - [What is it like to be a Politician?](./being-a-politician):
   Perspectives from the other side.

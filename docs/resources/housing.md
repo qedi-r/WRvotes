@@ -60,9 +60,6 @@ City councils also set policies on things like:
 </div>
 </div>
 
-## Media coverage
-
-{% include list-issue-media.html tag="housing" %}
 
 </div>
 </div>

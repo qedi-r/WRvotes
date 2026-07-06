@@ -1,5 +1,5 @@
 {% assign issue-media = site.data.sync.media
-| where_exp:"item", "item.Tags contains include.tag"
+| where_exp:"item", "item.Category contains include.tag"
 | sort: "PubDate"
 | reverse
 %}

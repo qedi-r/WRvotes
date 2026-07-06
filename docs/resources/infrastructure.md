@@ -67,9 +67,6 @@ to prioritize in capital budgets.
 </div>
 </div>
 
-## Media coverage
-
-{% include list-issue-media.html tag="infrastructure" %}
 
 </div>
 </div>

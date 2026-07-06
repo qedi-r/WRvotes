@@ -71,7 +71,10 @@ media pieces should have one of the following classifications:
 - News items that are about election issues (safe injection sites,
   intensification) but not about the election directly are probably
   not fair game. We should find a way to publish these somewhere,
-  maybe. 
+  maybe. There is a page `issues-overview.md` which publishes A FEW
+  (2-4) links per issue. Tag these articles with `Issue` as the
+  PositionIDList and one of the tags in `issues-categories.csv` as the
+  Category.
 
 ### Fuzzy lines
 

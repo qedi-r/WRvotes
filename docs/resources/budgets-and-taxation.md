@@ -77,9 +77,6 @@ Running down reserves to keep taxes low can shift costs to future taxpayers.
 </div>
 </div>
 
-## Media coverage
-
-{% include list-issue-media.html tag="budgets" %}
 
 </div>
 </div>
