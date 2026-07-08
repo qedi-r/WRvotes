@@ -1356,6 +1356,55 @@ body {
     }
   }
 
+  .worksheet-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    flex-wrap: wrap;
+    background: transparentize($green, 0.93);
+    border: 1px solid $green;
+    border-radius: 8px;
+    padding: 1em 1.5em;
+    margin: 2em 0;
+
+    > .fa-clipboard {
+      font-size: 2.5em;
+      color: $green;
+    }
+
+    .worksheet-banner-text {
+      flex: 1;
+
+      strong {
+        display: block;
+      }
+
+      p {
+        margin: 0.25em 0 0;
+      }
+    }
+
+    .open-worksheet-btn {
+      background: $blue;
+      color: $light;
+      padding: 0.6em 1.2em;
+      border-radius: 6px;
+      white-space: nowrap;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        background: darken($blue, 8%);
+        color: $light;
+      }
+
+      .fa-up-right-from-square {
+        margin-left: 0.4em;
+        font-size: 0.85em;
+      }
+    }
+  }
+
   .standout-box {
     background: $light;
     color: $dark;
