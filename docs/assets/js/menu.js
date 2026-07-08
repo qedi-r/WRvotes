@@ -1,12 +1,16 @@
 $(document).ready(function () {
-
   function add_ul_toggle_button(target, classname, title, inittext) {
     retval =
       '<button data-toc="' +
       target +
       '" ' +
-      'id="' + target + '-btn" ' + 'class="' + classname +
-      '" title="' + title +
+      'id="' +
+      target +
+      '-btn" ' +
+      'class="' +
+      classname +
+      '" title="' +
+      title +
       '" >' +
       inittext +
       "</button>";
@@ -41,6 +45,11 @@ $(document).ready(function () {
   function toggle_main_menu(button_id) {
     var target_ul = "#main-menu-ul";
     var target_button = "#main-menu-ul-btn";
+    if ($("#main-menu").hasClass("closed")) {
+      $("#main-menu").removeClass("closed");
+    } else {
+      $("#main-menu").addClass("closed");
+    }
 
     if ($(target_ul).hasClass("hidden")) {
       $(target_ul).removeClass("hidden");
@@ -81,5 +90,4 @@ $(document).ready(function () {
   $(".toggle-menu").on("click", function (e) {
     toggle_main_menu("#" + e.target.id);
   });
-
 });
