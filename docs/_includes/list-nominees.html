@@ -63,6 +63,10 @@
           {% endfor %}
       </div>
 
+      {% if include.ward-id %}
+        {% include worksheet-banner.html ward-id=include.ward-id %}
+      {% endif %}
+
     {% else %}
       <p>
       Whoops! Nobody appears to be running for this position!
