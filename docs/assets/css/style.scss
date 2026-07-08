@@ -15,6 +15,12 @@
     padding: 0 2%;
   }
 
+  @media screen and (max-width: 480px) {
+    .inner {
+      min-width: 0;
+    }
+  }
+
   .inner::after {
     /* Clearfix hack so menu button shows */
     content: "";
@@ -63,6 +69,12 @@ button.toggle-menu {
 }
 
 @media screen and (max-width: $menu-breakpoint) {
+  #main-menu.closed {
+    float: right;
+    position: relative;
+    z-index: 1;
+  }
+
   button.toggle-menu {
     display: block;
     float: right;
