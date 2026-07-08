@@ -52,6 +52,9 @@
       {% endif %}
     {% endunless %}
 
+    {% if include.ward-id %}
+      {% include worksheet-banner.html ward-id=include.ward-id %}
+    {% endif %}
 
     {% if sorted-nominees.size > 0 or num-to-elect == 0 %}
       <div class="candidate-list-grid">
@@ -62,10 +65,6 @@
             %}
           {% endfor %}
       </div>
-
-      {% if include.ward-id %}
-        {% include worksheet-banner.html ward-id=include.ward-id %}
-      {% endif %}
 
     {% else %}
       <p>
