@@ -70,9 +70,10 @@ button.toggle-menu {
 
 @media screen and (max-width: $menu-breakpoint) {
   #main-menu.closed {
-    float: right;
-    position: relative;
-    z-index: 1;
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    z-index: 10;
   }
 
   button.toggle-menu {
@@ -1233,8 +1234,6 @@ body {
   #main_content_wrap {
     border-top: none;
     border-bottom: none;
-    padding-top: 2vh;
-    padding-bottom: 2vh;
     background: $light;
 
     .inner {
@@ -1624,6 +1623,18 @@ body {
 }
 
 /* ---- Responsive Design ---- */
+@media screen and (max-width: 320px) {
+  body {
+    min-width: 240px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    min-width: 320px;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .main {
     border-left: 0.3em solid $blue;
